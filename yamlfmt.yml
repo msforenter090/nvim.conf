@@ -1,0 +1,13 @@
+line_ending: lf
+doublestar: true
+continue_on_error: false
+gitignore_excludes: true
+output_format: gitlab
+formatter:
+    indent: 4
+    line_ending: lf
+    retain_line_breaks: true
+    max_line_length: 120
+    eof_newline: true
+    pad_line_comments: 1
+    trim_trailing_whitespace: true

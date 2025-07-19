@@ -25,11 +25,8 @@ require("config.lazy").setup({
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    -- Lua
-                    "stylua",
-
-                    -- Bash
-                    "shfmt",
+                    -- Formatters
+                    "stylua", "shfmt", "yamlfmt"
                 },
             })
         end,
@@ -43,6 +40,7 @@ require("config.lazy").setup({
                     lua = { "stylua" },
                     sh = { "shfmt" },
                     bash = { "shfmt" },
+                    yaml = { "yamlfmt" }
                 },
 
                 formatters = {
