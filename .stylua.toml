@@ -1,0 +1,14 @@
+# .stylua.toml
+
+# Use spaces instead of tabs
+indent_type = "Spaces"
+
+# Set indentation width to 4 spaces
+indent_width = 4
+
+# Optional: keep other stylua defaults or adjust as needed
+column_width = 120              # max line width
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"
+line_endings = "Unix"
+
