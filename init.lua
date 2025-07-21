@@ -1,4 +1,4 @@
-require("config.base").setup()
+require("config.base")
 require("config.lazy").setup({
     {
         "folke/tokyonight.nvim",
@@ -12,6 +12,52 @@ require("config.lazy").setup({
             vim.cmd([[colorscheme tokyonight]])
         end,
     },
+    --    {
+    --        "neovim/nvim-lspconfig",
+    --        opts = {},
+    --        config = function()
+    --            local lspconfig = require("lspconfig")
+    --
+    --            lspconfig.bashls.setup({
+    --                on_attach = function(client, bufnr)
+    --                    print("Comp: " .. tostring(client:supports_method("textDocument/completion")))
+    --                    if client:supports_method("textDocument/completion") then
+    --                        vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
+    --                        vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    --                        vim.keymap.set("i", "<C-Space>", function()
+    --                            vim.lsp.completion.get()
+    --                        end)
+    --                    end
+    --                    -- Keybindings or other per-buffer setup here
+    --                    local opts = { noremap = true, silent = true }
+    --                    vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    --
+    --                    -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+    --                    -- vim.keymap.set("n", "gD", vim.lsp.buf.declaration, {})
+    --                    -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {})
+    --                    vim.keymap.set("n", "gr", vim.lsp.buf.references, {})
+    --                    -- vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, {})
+    --                    -- vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, {})
+    --                    -- vim.keymap.set("n", "<leader>wl", function()
+    --                    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    --                    -- end, {})
+    --                    -- vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, {})
+    --                    -- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, {})
+    --                    -- vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+    --                    -- vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+    --                    vim.keymap.set("n", "gl", vim.diagnostic.open_float, {})
+    --                    -- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {})
+    --                    -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {})
+    --                    -- vim.keymap.set("n", "<leader>w", vim.lsp.diagnostic.show_line_diagnost)
+    --                end,
+    --                flags = {
+    --                    debounce_text_changes = 150,
+    --                },
+    --            })
+    --
+    --            vim.lsp.enable("bashls")
+    --        end,
+    --    },
     {
         "mason-org/mason.nvim",
         opts = {},
@@ -26,7 +72,13 @@ require("config.lazy").setup({
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     -- Formatters
-                    "stylua", "shfmt", "yamlfmt"
+                    "stylua",
+                    "shfmt",
+                    "yamlfmt",
+
+                    -- Lsp & Checks(Bash)
+                    "bash-language-server",
+                    "shellcheck",
                 },
             })
         end,
@@ -40,7 +92,7 @@ require("config.lazy").setup({
                     lua = { "stylua" },
                     sh = { "shfmt" },
                     bash = { "shfmt" },
-                    yaml = { "yamlfmt" }
+                    yaml = { "yamlfmt" },
                 },
 
                 formatters = {
@@ -57,5 +109,36 @@ require("config.lazy").setup({
             })
         end,
     },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            { "neovim/nvim-lspconfig", opts = {} },
+        },
+        config = function()
+            require("mason-lspconfig").setup()
+        end,
+    },
+    {
+        "mfussenegger/nvim-lint",
+        config = function()
+            local lint = require("lint")
+
+            -- Configure linters per filetype
+            lint.linters_by_ft = {
+                sh = { "shellcheck" },
+            }
+
+            -- Auto-run linter on save
+            vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "InsertLeave" }, {
+                callback = function()
+                    lint.try_lint()
+                end,
+            })
+        end,
+    },
 })
 require("config.keymaps").setup()
+
+vim.diagnostic.config({ virtual_text = true })
