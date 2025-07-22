@@ -24,15 +24,3 @@ vim.opt.listchars = {
     precedes = "‹",
     space = " ", -- optional: shows dots for spaces too
 }
-
--- Old stuff.
--- Add command for Lua formatting.
---    vim.api.nvim_create_user_command("FormatLua", function()
---      vim.cmd("!lua-format" .. " -i " .. vim.fn.shellescape(vim.api.nvim_buf_get_name(0)))
---      vim.cmd("edit!") -- reload buffer
---    end, { desc = "Format current Lua file." })
-
---    vim.api.nvim_create_user_command("FormatC", function()
---      vim.cmd("!clang-format" .. " -i " .. vim.fn.shellescape(vim.api.nvim_buf_get_name(0)))
---      vim.cmd("edit!") -- reload buffer
---    end, { desc = "Format current C / C++ file." })
