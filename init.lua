@@ -26,14 +26,16 @@ require("config.lazy").setup({
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    -- Formatters
+                    -- Lua & Yaml
                     "stylua",
-                    "shfmt",
                     "yamlfmt",
 
-                    -- Lsp & Checks(Bash)
+                    -- Bash
                     "bash-language-server",
                     "shellcheck",
+                    "shfmt",
+
+                    -- Python
                 },
             })
         end,
@@ -45,21 +47,7 @@ require("config.lazy").setup({
             require("conform").setup({
                 formatters_by_ft = {
                     lua = { "stylua" },
-                    sh = { "shfmt" },
-                    bash = { "shfmt" },
                     yaml = { "yamlfmt" },
-                },
-
-                formatters = {
-                    shfmt = {
-                        prepend_args = {
-                            "-i",
-                            "4",
-                            "-bn",
-                            "-ci",
-                            "-sr",
-                        },
-                    },
                 },
             })
         end,
@@ -76,7 +64,6 @@ require("config.lazy").setup({
             local lspconfig = require("lspconfig")
             lspconfig.bashls.setup({
                 on_attach = function(client, bufnr)
-                    count = count + 1
                     if client:supports_method("textDocument/completion") then
                         vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
                         vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
@@ -113,6 +100,6 @@ require("config.lazy").setup({
         end,
     },
 })
-require("config.keymaps").setup()
 
+require("config.keymaps").setup()
 vim.diagnostic.config({ virtual_text = true })
