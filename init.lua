@@ -1,5 +1,4 @@
 require("config.base")
-count = 1
 require("config.lazy").setup({
     {
         "folke/tokyonight.nvim",
@@ -18,27 +17,6 @@ require("config.lazy").setup({
         opts = {},
         config = function()
             require("mason").setup()
-        end,
-    },
-    {
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
-        opts = {},
-        config = function()
-            require("mason-tool-installer").setup({
-                ensure_installed = {
-                    -- Lua & Yaml
-                    "stylua",
-                    "yamlfmt",
-
-                    -- Bash
-                    "bash-language-server",
-                    "shellcheck",
-                    "shfmt",
-
-                    -- Python
-                    "python-lsp-server",
-                },
-            })
         end,
     },
     {
@@ -61,12 +39,26 @@ require("config.lazy").setup({
             { "neovim/nvim-lspconfig" },
         },
         config = function()
-            require("mason-lspconfig").setup()
-            enableConfig = function(tool)
-                require("lsp." .. tool .. ".config").config()
-            end
-            enableConfig("bashls")
-            enableConfig("pyls")
+            -- Make sure tools are installed.
+            local tools = {
+                "stylua", "yamlfmt", "shellcheck", "shfmt"
+            }
+
+            require("lsp.util").install_tools(tools)
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    -- Bash
+                    "bashls",
+
+                    -- Python
+                    "pylsp",
+
+                    -- Lua
+                    "lua_ls"
+                }
+            })
+            require("lsp.util").load_config({"bashls", "pyls"})
+
         end,
     },
 })

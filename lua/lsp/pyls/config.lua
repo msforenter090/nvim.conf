@@ -3,7 +3,6 @@ M = {
         local lspconfig = require("lspconfig")
 
         lspconfig.pylsp.setup({
-            capabilities = capabilities,
             on_attach = function(client, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)

@@ -1,0 +1,3 @@
+-- Bash
+https://explainshell.com/
+https://www.shellcheck.net/
