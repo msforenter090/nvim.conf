@@ -11,26 +11,26 @@ M = {
                     end)
                 end
                 -- Keybindings or other per-buffer setup here
-                local opts = { noremap = true, silent = true }
-                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                local opts = { noremap = true, silent = true, buffer = bufnr }
+                vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
+                vim.keymap.set("n", "<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+                    opts)
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "gf", vim.diagnostic.open_float, opts)
+                vim.keymap.set("n", "gn", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+                vim.keymap.set("n", "gb", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 
-                --                    -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-                --                    -- vim.keymap.set("n", "gD", vim.lsp.buf.declaration, {})
-                --                    -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {})
-                --                    vim.keymap.set("n", "gr", vim.lsp.buf.references, {})
-                --                    -- vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, {})
-                --                    -- vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, {})
-                --                    -- vim.keymap.set("n", "<leader>wl", function()
-                --                    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                --                    -- end, {})
-                --                    -- vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, {})
-                --                    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, {})
-                --                    -- vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-                --                    -- vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-                --                    vim.keymap.set("n", "gl", vim.diagnostic.open_float, {})
-                --                    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {})
-                --                    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {})
-                --                    vim.keymap.set("n", "<leader>w", vim.lsp.diagnostic.show_line_diagnost)
+                -- Not supported
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.implementation, opts)
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.declaration, opts)
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.type_definition, opts)
+
+                -- Maybe usefull later
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.add_workspace_folder, {})
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.remove_workspace_folder, {})
+                -- vim.keymap.set("n", "empty", vim.lsp.buf.code_action, opt)
             end,
             flags = {
                 debounce_text_changes = 150,

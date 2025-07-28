@@ -41,7 +41,9 @@ require("config.lazy").setup({
         config = function()
             -- Make sure tools are installed.
             local tools = {
-                "stylua", "yamlfmt", "shellcheck", "shfmt"
+                "stylua", "yamlfmt",
+                "shellcheck",
+                "shfmt"
             }
 
             require("lsp.util").install_tools(tools)
@@ -57,8 +59,13 @@ require("config.lazy").setup({
                     "lua_ls"
                 }
             })
-            require("lsp.util").load_config({"bashls", "pyls"})
+            -- Lua:
+            -- luals Key binding and suggestions do not work because thay are not added.
+            -- Client is not attached.
 
+            -- Bash:
+            -- Shell checking shows double Warrnings, Errors and everything else.
+            require("lsp.util").load_config({ "bashls", "pyls", "luals" })
         end,
     },
 })
