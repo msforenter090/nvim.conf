@@ -68,9 +68,23 @@ require("config.lazy").setup({
             require("lsp.util").load_config({ "bashls", "pyls", "luals" })
         end,
     },
+    {
+        "nvim-telescope/telescope.nvim",
+        tag = "0.1.8",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "sharkdp/fd",
+            "nvim-treesitter/nvim-treesitter"
+        },
+        config = function()
+            require("telescope").setup()
+        end
+    }
 })
 
 require("config.keymaps").setup()
+require("config.keymaps.telescope.keymap").setup()
+
 vim.diagnostic.config({
     virtual_text = true,
     signs = true,
