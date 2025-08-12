@@ -4,8 +4,9 @@ local M = {
         vim.keymap.set("n", "<leader>fl", function()
             if vim.bo.filetype == "yaml" then
                 require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
+            else
+                vim.lsp.buf.format()
             end
-            vim.lsp.buf.format()
         end)
     end,
 }

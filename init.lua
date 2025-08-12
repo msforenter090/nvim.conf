@@ -43,10 +43,12 @@ require("config.lazy").setup({
             local tools = {
                 "stylua", "yamlfmt",
                 "shellcheck",
-                "shfmt"
+                "shfmt",
             }
 
             require("lsp.util").install_tools(tools)
+
+            -- ensure_installed only installs lsps, not regular tools.
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     -- Bash
