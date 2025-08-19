@@ -81,6 +81,45 @@ require("config.lazy").setup({
         config = function()
             require("telescope").setup()
         end
+    },
+    {
+        "rcarriga/nvim-dap-ui",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio",
+            "mfussenegger/nvim-dap-python",
+
+            -- wget -P ~/.local/share/fonts https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip \
+            -- && cd ~/.local/share/fonts \
+            -- && unzip JetBrainsMono.zip \
+            -- && rm JetBrainsMono.zip \
+            -- && fc-cache -fv
+            "nvim-tree/nvim-web-devicons"
+        },
+        config = function()
+            local dapui = require("dapui")
+            local dap = require("dap")
+            local dapPython = require("dap-python")
+
+            dapui.setup()
+            dapPython.setup(vim.fn.exepath("python"))
+
+            dap.listeners.before.attach.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.launch.dapui_config = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated.dapui_config = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited.dapui_config = function()
+                dapui.close()
+            end
+
+            vim.keymap.set('n', '<leader>dt', dap.toggle_breakpoint, {})
+            vim.keymap.set('n', '<leader>dc', dap.continue, {})
+        end
     }
 })
 
