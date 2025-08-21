@@ -44,6 +44,15 @@ require("config.lazy").setup({
                 "stylua", "yamlfmt",
                 "shellcheck",
                 "shfmt",
+
+                -- Dap
+                -- I do think debugpy is required
+                -- You should have it installed in your virt env.
+                -- You can install it via Mason, but mason will pull down
+                -- virt env and install it inside.
+                -- In that case you are using two virt envs, one where debugpy
+                -- is installed and the other where you packages are located.
+                "debugpy"
             }
 
             require("lsp.util").install_tools(tools)
@@ -97,29 +106,30 @@ require("config.lazy").setup({
             "nvim-tree/nvim-web-devicons"
         },
         config = function()
-            local dapui = require("dapui")
-            local dap = require("dap")
-            local dapPython = require("dap-python")
-
-            dapui.setup()
-            dapPython.setup(vim.fn.exepath("python"))
-
-            dap.listeners.before.attach.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.launch.dapui_config = function()
-                dapui.open()
-            end
-            dap.listeners.before.event_terminated.dapui_config = function()
-                dapui.close()
-            end
-            dap.listeners.before.event_exited.dapui_config = function()
-                dapui.close()
-            end
-
-            vim.keymap.set('n', '<leader>dt', dap.toggle_breakpoint, {})
-            vim.keymap.set('n', '<leader>dc', dap.continue, {})
+            require("dap.dap").setup()
         end
+    },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+            bigfile = { enabled = false },
+            dashboard = { enabled = false },
+            explorer = { enabled = true },
+            indent = { enabled = true },
+            input = { enabled = true },
+            picker = { enabled = true },
+            notifier = { enabled = true },
+            quickfile = { enabled = true },
+            scope = { enabled = true },
+            scroll = { enabled = true },
+            statuscolumn = { enabled = true },
+            words = { enabled = true },
+        },
     }
 })
 
