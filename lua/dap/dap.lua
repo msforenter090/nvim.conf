@@ -25,15 +25,16 @@ M = {
 
         -- Session management
         -- Start and continue are the same.
-        vim.keymap.set("n", "ee", dap.continue, vim.tbl_extend("force", opts, { desc = "DAP Start debugging." }))
+        vim.keymap.set("n", "<leader>de", dap.continue, vim.tbl_extend("force", opts, { desc = "DAP Start and continue debugging." }))
 
         -- Terminate debug session and close dapui
-        vim.keymap.set("n", "qq", function() dap.close() dapui.close() end, vim.tbl_extend("force", opts, { desc = "DAP Terminate debugging." }))
+        vim.keymap.set("n", "<leader>dq", function() dap.close() dapui.close() end, vim.tbl_extend("force", opts, { desc = "DAP Terminate debugging." }))
 
-        vim.keymap.set("n", "tt", dap.toggle_breakpoint, vim.tbl_extend("force", opts, { desc = "DAP Toggle Breakpoint." }))
-        vim.keymap.set("n", "dd", dap.step_over, vim.tbl_extend("force", opts, { desc = "DAP Step over." }))
-        vim.keymap.set("n", "ss", dap.step_into, vim.tbl_extend("force", opts, { desc = "DAP Stop into." }))
-        vim.keymap.set("n", "aa", dap.step_out, vim.tbl_extend("force", opts, { desc = "DAP Stop out of." }))
+        -- Debugging
+        vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, vim.tbl_extend("force", opts, { desc = "DAP Toggle Breakpoint." }))
+        vim.keymap.set("n", "<leader>dd", dap.step_over, vim.tbl_extend("force", opts, { desc = "DAP Step over." }))
+        vim.keymap.set("n", "<leader>ds", dap.step_into, vim.tbl_extend("force", opts, { desc = "DAP Stop into." }))
+        vim.keymap.set("n", "<leader>da", dap.step_out, vim.tbl_extend("force", opts, { desc = "DAP Stop out of." }))
     end
 }
 

@@ -5,15 +5,17 @@ M = {
         lspconfig.pylsp.setup({
             on_attach = function(client, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
-                vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
-                vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
-                vim.keymap.set("n", "<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-                    opts)
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "gf", vim.diagnostic.open_float, opts)
-                vim.keymap.set("n", "gn", function() vim.diagnostic.jump({ count = 1 }) end, opts)
-                vim.keymap.set("n", "gb", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+                vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "LSP goto definition." }))
+                vim.keymap.set("n", "<leader>lr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "LSP check references." }))
+                vim.keymap.set("n", "<leader>lwf",
+                    function()
+                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                    end, vim.tbl_extend("force", opts, { desc = "LSP list workspaces." }))
+                vim.keymap.set("n", "<leader>lrn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "LSP rename." }))
+                vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "LSP hover." }))
+                vim.keymap.set("n", "<leader>lfw", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "LSP open float window." }))
+                -- vim.keymap.set("n", "gn", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+                -- vim.keymap.set("n", "gb", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 
                 if client:supports_method("textDocument/completion") then
                     vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
