@@ -24,3 +24,5 @@ vim.opt.listchars = {
     precedes = "‹",
     space = " ", -- optional: shows dots for spaces too
 }
+
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { silent = true })

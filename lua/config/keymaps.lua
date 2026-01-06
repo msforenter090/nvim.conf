@@ -1,14 +1,14 @@
 local M = {
     setup = function()
-        -- Code formatter.
-        vim.keymap.set("n", "<leader>fl", function()
-            if vim.bo.filetype == "yaml" then
-                require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
-            else
-                vim.lsp.buf.format()
-            end
-        end)
-    end,
-}
+        -- Easier exit from terminal.
+        vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { silent = true })
 
+        -- Telescope
+        local builtin = require('telescope.builtin')
+        vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+        vim.keymap.set('n', '<leader>ls', builtin.buffers, { desc = 'Telescope buffers' })
+        vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+    end
+}
 return M

@@ -13,132 +13,102 @@ require("config.lazy").setup({
         end,
     },
     {
-        "mason-org/mason.nvim",
+        -- Usefull as a dependency to other libraries.
+        "nvim-lua/plenary.nvim",
         opts = {},
         config = function()
+        end
+    },
+    {
+       "mason-org/mason.nvim",
+        opts = {},
+        setup = function()
             require("mason").setup()
-        end,
+        end
     },
     {
-        "stevearc/conform.nvim",
-        opts = {},
+        "gutsavgupta/nvim-gemini-companion",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        event = "VeryLazy",
         config = function()
-            require("conform").setup({
-                formatters_by_ft = {
-                    lua = { "stylua" },
-                    yaml = { "yamlfmt" },
-                },
-            })
-        end,
-    },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        opts = {},
-        dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            { "neovim/nvim-lspconfig" },
-        },
-        config = function()
-            -- Make sure tools are installed.
-            local tools = {
-                "stylua", "yamlfmt",
-                "shellcheck",
-                "shfmt",
-
-                -- Dap
-                -- I do think debugpy is required
-                -- You should have it installed in your virt env.
-                -- You can install it via Mason, but mason will pull down
-                -- virt env and install it inside.
-                -- In that case you are using two virt envs, one where debugpy
-                -- is installed and the other where you packages are located.
-                "debugpy"
-            }
-
-            require("lsp.util").install_tools(tools)
-
-            -- ensure_installed only installs lsps, not regular tools.
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    -- Bash
-                    "bashls",
-
-                    -- Python
-                    "pylsp",
-
-                    -- Lua
-                    "lua_ls"
+            require("gemini").setup({
+                cmds = { "gemini-cli" },
+                 win = {
+                    preset = "bottom-fixed",  -- Options: "right-fixed", "left-fixed", "bottom-fixed", "floating"
+                    -- width = 0.8,
+                    -- height = 0.8,
                 }
             })
-            -- Lua:
-            -- luals Key binding and suggestions do not work because thay are not added.
-            -- Client is not attached.
-
-            -- Bash:
-            -- Shell checking shows double Warrnings, Errors and everything else.
-            require("lsp.util").load_config({ "bashls", "pyls", "luals" })
+            vim.api.nvim_command("GeminiToggle")
         end,
+        keys = {
+            { "<leader>gg", "<cmd>GeminiToggle<cr>", desc = "Toggle Gemini sidebar" },
+            { "<leader>gc", "<cmd>GeminiSwitchToCli<cr>", desc = "Spawn or switch to AI session" },
+            { '<leader>gS', '<cmd>GeminiSend<cr>', mode = { 'x' }, desc = 'Send selection to Gemini' },
+        }
     },
     {
-        "nvim-telescope/telescope.nvim",
-        tag = "0.1.8",
+        'nvim-telescope/telescope.nvim', tag = 'v0.2.1',
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "sharkdp/fd",
-            "nvim-treesitter/nvim-treesitter"
-        },
-        config = function()
-            require("telescope").setup()
-        end
-    },
-    {
-        "rcarriga/nvim-dap-ui",
-        dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio",
-            "mfussenegger/nvim-dap-python",
-
-            -- wget -P ~/.local/share/fonts https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip \
-            -- && cd ~/.local/share/fonts \
-            -- && unzip JetBrainsMono.zip \
-            -- && rm JetBrainsMono.zip \
-            -- && fc-cache -fv
-            "nvim-tree/nvim-web-devicons"
-        },
-        config = function()
-            require("dap.dap").setup()
-        end
+            'nvim-lua/plenary.nvim',
+            -- optional but recommended
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = 'make'
+            },
+        }
     },
     {
         "folke/snacks.nvim",
         priority = 1000,
         lazy = false,
+        ---@type snacks.Config
         opts = {
             -- your configuration comes here
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
             bigfile = { enabled = false },
             dashboard = { enabled = false },
-            explorer = { enabled = false },
+            explorer = {
+                enabled = true,
+                replace_netrw = true,
+                trash = false
+            },
             indent = { enabled = true },
             input = { enabled = true },
             picker = { enabled = true },
-            notifier = { enabled = false },
-            quickfile = { enabled = false },
-            scope = { enabled = true },
+            notifier = { enabled = true },
+            quickfile = { enabled = true },
+            scope = { enabled = false },
             scroll = { enabled = false },
             statuscolumn = { enabled = true },
             words = { enabled = true },
+            terminal = { enabled = true }
         },
+        keys = {
+            { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+            { "<leader>tt", function() Snacks.terminal.toggle() end, desc = "Terminal Toggle" },
+            { "<leader>not",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+        }
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = {
+            'nvim-tree/nvim-web-devicons'
+        },
+        config = function()
+            require('lualine').setup()
+        end
     }
 })
 
 require("config.keymaps").setup()
-require("config.keymaps.telescope.keymap").setup()
 
-vim.diagnostic.config({
-    virtual_text = true,
-    signs = true,
-    underline = true,
-    float = { border = "rounded" },
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        -- Open explorer.
+        Snacks.explorer()
+
+        -- I planned to open Gemini here, but command is not available here (not sure why)
+    end,
 })
